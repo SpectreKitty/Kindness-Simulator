@@ -40,6 +40,26 @@ image tree_grow3:
     pause 0.5
     "tree_full" with Dissolve(1.0)
 
+label menu_to_day1:
+    scene black with dissolve
+    show text "Day 1" with dissolve
+    pause 2.0
+    hide text with dissolve
+    jump day1_morning
+
+label day1_to_day2:
+    scene black with dissolve
+    show text "Day 2" with dissolve
+    pause 2.0
+    hide text with dissolve
+    jump day2_morning
+
+label day2_to_day3:
+    scene black with dissolve
+    show text "Day 3" with dissolve
+    pause 2.0
+    hide text with dissolve
+    jump day3_morning
 
 label start:
     scene bg menu
@@ -49,10 +69,10 @@ label start:
         if not player_name:
             player_name = "Player"
     
-    jump day1_morning
+    jump menu_to_day1
 
 label day1_morning:
-    scene bg menu
+    scene bg bedroom
     
     n "The warm sunlight filters through the curtains, gently waking you up. Today marks the start of your new chapter in this little community."
     
@@ -75,7 +95,7 @@ label day1_morning:
     jump day1_community_board
 
 label day1_community_board:
-    scene bg menu
+    scene bg community_board
    
     n "You spot a wooden community board under a large oak tree."
 
@@ -84,7 +104,7 @@ label day1_community_board:
        
         "Missing Cat Poster" if not quests_completed["cat_quest"]:
             $ kindness_points += 5
-            jump maze_game
+            jump cat_search
            
         "Garden Help Needed" if not quests_completed["garden_quest"]: 
             $ kindness_points += 5
@@ -137,13 +157,13 @@ label garden_cleanup_quest:
     jump day1_night
 
 label day1_night:
-    scene bg menu
+    scene bg bedroom_night
     
     n "The moonlight streams through your window."
     
-    if olive_found:
+    if quests_completed["cat_quest"]:
         n "You think about Olive's happy reunion with Rose."
-    if garden_helped:
+    if quests_completed["garden_quest"]:
         n "Your hands still smell of earth from the garden."
 
     menu:
@@ -160,17 +180,31 @@ label day1_night:
         "Just sleep":
             mc "Time to rest..."
 
-    if kindness_points >= 10:
+    if  10 < kindness_points > 20:
         scene bg menu with dissolve
         n "The seed in your garden begins to glow..."
         show tree_grow1 with dissolve
         pause 4.0
         n "A small sprout emerges, pulsing with gentle light."
 
-    jump day2_morning
+    if  20 < kindness_points > 30:
+        scene bg menu with dissolve
+        n "The sprout glows brighter..."
+        show tree_grow2 with dissolve
+        pause 4.0
+        n "It's growing stronger, just like your community bonds."
+        
+    if kindness_points >= 30:
+        scene bg menu with dissolve
+        n "The tree reaches its full splendor..."
+        show tree_grow3 with dissolve
+        pause 4.0
+        n "A beacon of kindness for the whole community."
+    
+    jump day1_to_day2
 
 label day2_morning:
-    scene bg menu
+    scene bg bedroom
    
     n "Morning sunlight streams through your window."
    
@@ -195,7 +229,7 @@ label day2_morning:
     jump day2_community_board
 
 label day2_community_board:
-    scene bg menu
+    scene bg community_board
    
     n "You spot a wooden community board under a large oak tree."
 
@@ -216,35 +250,12 @@ label day2_community_board:
 
         "Keep walking":
             $ kindness_points -= 2
-            jump day1_night
-
-
-label garden_scene:
-    $ garden_helped = True
-   
-    n "Mr. Chen smiles as you approach the garden."
-   
-    menu:
-        mr_chen "Would you like to learn about medicinal herbs today?"
-       
-        "Yes, please teach me":
-            $ kindness_points += 5
-            mr_chen "Your eagerness to learn brings joy to this old gardener."
-           
-        "I'd rather just help weed":
-            $ kindness_points += 3
-            mr_chen "Even the simplest tasks have profound importance."
-           
-        "Share gardening stories":
-            $ kindness_points += 4
-            mr_chen "Every plant here has a story..."
-
-    jump day2_night
+            jump day2_night
 
 label day2_night:
-    scene bg menu
+    scene bg bedroom_night
    
-    if garden_helped:
+    if quests_completed["garden_quest"]:
         n "Your hands still carry the garden's earthen scent."
        
     menu:
@@ -264,15 +275,117 @@ label day2_night:
            
         "Sleep early":
             mc "Tomorrow brings new opportunities."
+    
+    if  10 < kindness_points > 20:
+        scene bg menu with dissolve
+        n "The seed in your garden begins to glow..."
+        show tree_grow1 with dissolve
+        pause 4.0
+        n "A small sprout emerges, pulsing with gentle light."
 
-    if kindness_points >= 20:
+    if  20 < kindness_points > 30:
         scene bg menu with dissolve
         n "The sprout glows brighter..."
         show tree_grow2 with dissolve
         pause 4.0
         n "It's growing stronger, just like your community bonds."
 
-    jump day3_morning
+    if kindness_points >= 30:
+        scene bg menu with dissolve
+        n "The tree reaches its full splendor..."
+        show tree_grow3 with dissolve
+        pause 4.0
+        n "A beacon of kindness for the whole community."
+
+    jump day2_to_day3
+
+label day3_morning:
+    scene bg bedroom
+   
+    menu:
+        n "Your final morning affirmation:"
+       
+        "I bring light wherever I go":
+            $ kindness_points += 5
+            mc "Like the glowing tree, every act of kindness spreads light."
+           
+        "My community grows stronger through caring":
+            $ kindness_points += 5
+            mc "We're all connected, growing together."
+           
+        "I am connected to those around me":
+            $ kindness_points += 5
+            mc "This place truly feels like home now."
+           
+        "Skip affirmation":
+            mc "Time to face the day."
+
+    jump day3_community_board
+
+label day3_community_board:
+    scene bg community_board
+   
+    n "The community board has some new requests..."
+
+    menu:
+        "What will you do today?"
+       
+        "Missing Cat Poster" if not quests_completed["cat_quest"]:
+            $ kindness_points += 5
+            jump maze_game
+           
+        "Garden Help Needed" if not quests_completed["garden_quest"]:
+            $ kindness_points += 5
+            jump garden_cleanup_quest
+           
+        "Help Sarah" if not quests_completed["sarah_quest"]:
+            $ kindness_points += 5
+            jump sarah_help_quest
+   
+    jump day3_night
+
+label day3_night:
+    scene bg bedroom_night
+   
+    n "Your final evening in our story arrives."
+   
+    menu:
+        "Final reflection:"
+       
+        "Write in journal":
+            $ kindness_points += 5
+            mc "These past days have changed me..."
+
+        "Visit the glowing tree":
+            $ kindness_points += 5
+            mc "It's grown so much, just like my connections here."
+           
+        "Thank your neighbors":
+            $ kindness_points += 5
+            mc "Everyone has made me feel so welcome."
+
+    if  10 < kindness_points > 20:
+        scene bg menu with dissolve
+        n "The seed in your garden begins to glow..."
+        show tree_grow1 with dissolve
+        pause 4.0
+        n "A small sprout emerges, pulsing with gentle light."
+
+    if  20 < kindness_points > 30:
+        scene bg menu with dissolve
+        n "The sprout glows brighter..."
+        show tree_grow2 with dissolve
+        pause 4.0
+        n "It's growing stronger, just like your community bonds."
+        
+    if kindness_points >= 30:
+        scene bg menu with dissolve
+        n "The tree reaches its full splendor..."
+        show tree_grow3 with dissolve
+        pause 4.0
+        n "A beacon of kindness for the whole community."
+
+    jump game_end
 
 label game_end:
     if kindness_points >= 50:
