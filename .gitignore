@@ -1,0 +1,20 @@
+# Ren'Py specific
+game/cache/
+game/saves/
+log.txt
+errors.txt
+traceback.txt
+*.rpyc
+*.rpyb
+*.rpymc
+*.pyc
+*.pyo
+
+# Build directories
+game/build/
+build/
+dist/
+
+# System specific
+.DS_Store
+Thumbs.db
